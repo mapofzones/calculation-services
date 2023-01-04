@@ -18,10 +18,10 @@ import static java.time.ZoneOffset.UTC;
 @Service
 public class ChartService implements IChartService {
 
-    private DelegationsRepository delegationsRepository;
-    private IbcTransferChartRepository ibcTransferChartRepository;
-    private IbcVolumeChartRepository ibcVolumeChartRepository;
-    private TxsChartRepository txsChartRepository;
+    private final DelegationsRepository delegationsRepository;
+    private final IbcTransferChartRepository ibcTransferChartRepository;
+    private final IbcVolumeChartRepository ibcVolumeChartRepository;
+    private final TxsChartRepository txsChartRepository;
 
     public ChartService(DelegationsRepository delegationsRepository,
                         IbcTransferChartRepository ibcTransferChartRepository,

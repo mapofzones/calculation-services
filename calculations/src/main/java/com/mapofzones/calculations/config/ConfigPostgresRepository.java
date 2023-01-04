@@ -29,9 +29,6 @@ import java.util.HashMap;
 
 public class ConfigPostgresRepository {
 
-    @Autowired
-    private Environment env;
-
     @Bean
     public LocalContainerEntityManagerFactoryBean postgresEntityManager(DataSource postgresDataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();

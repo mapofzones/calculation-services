@@ -39,7 +39,7 @@ jobs:
           image_path: ${{ secrets.CALC_IMAGE_PATH }}
           # Number of characters from the commit SHA
           sha_size: 8 # optional, default is 8
-          dockerfile: "./calculations/Dockerfile"
+          dockerfile: "/calculations/Dockerfile"
 #      - name: Notify Telegram
 #        uses: yanzay/notify-telegram@v0.1.0
 #        if: always()
