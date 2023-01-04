@@ -24,7 +24,7 @@ jobs:
       - name: GitHub Action for DigitalOcean - doctl
         # You may pin to the exact commit or the version.
         # uses: digitalocean/action-doctl@7f3a9967e5f7b8f4581cf10e6891535614f36850
-        uses: digitalocean/action-doctl@v2.1.0
+        uses: digitalocean/action-doctl@v2.3
         with:
           # Version of doctl to install
           #         version: # optional, default is latest
@@ -33,12 +33,13 @@ jobs:
       - name: DigitalOcean Docker Image Publish
         # You may pin to the exact commit or the version.
         # uses: ripplr-io/docr-docker-publish@4b4d57000d6e16fe589b3cea2d491830b9d7da87
-        uses: ripplr-io/docr-docker-publish@v1
+        uses: ripplr-io/docr-docker-publish@v1.0.2
         with:
           # Image path in the format registry-name/image-name
           image_path: ${{ secrets.API_IMAGE_PATH }}
           # Number of characters from the commit SHA
           sha_size: 8 # optional, default is 8
+          dockerfile: "./api/Dockerfile"
 #      - name: Notify Telegram
 #        uses: yanzay/notify-telegram@v0.1.0
 #        if: always()
