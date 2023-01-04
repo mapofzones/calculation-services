@@ -11,5 +11,5 @@ RUN mvn package -DskipTests -pl calculations
 
 FROM openjdk:17-slim
 
-COPY --from=build /opt/app/calculations/target/api-*.jar /opt/app.jar
+COPY --from=build /opt/app/calculations/target/calculations-*.jar /opt/app.jar
 CMD java -jar /opt/app.jar --spring.profiles.active=prod
