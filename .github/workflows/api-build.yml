@@ -41,7 +41,7 @@ jobs:
           image_path: ${{ secrets.API_IMAGE_PATH }}
           # Number of characters from the commit SHA
           sha_size: 8 # optional, default is 8
-          dockerfile: "/api/Dockerfile"
+          dockerfile: "./api/Dockerfile"
 #      - name: Notify Telegram
 #        uses: yanzay/notify-telegram@v0.1.0
 #        if: always()
