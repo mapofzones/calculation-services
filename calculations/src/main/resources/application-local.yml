@@ -9,4 +9,4 @@ spring:
 
   data:
     mongodb:
-      uri: ${MONGODB_URL}
+      uri: ${MONGODB_URI}
