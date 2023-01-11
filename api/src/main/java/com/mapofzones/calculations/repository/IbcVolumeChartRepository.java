@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IbcVolumeChartRepository extends MongoRepository<IbcVolumeChart, String> {
 
     @Transactional
-    //@Query("{'data.zone': {$eq: ?0}}")
+    //@Query("{'data.zone': '?0'}")
     IbcVolumeChart findByData_Zone(String zone);
 
 }

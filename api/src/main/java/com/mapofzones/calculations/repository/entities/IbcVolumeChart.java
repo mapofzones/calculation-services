@@ -7,14 +7,8 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Function;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -26,8 +20,7 @@ public class IbcVolumeChart {
     private Data data;
 
     public IbcVolumeChart withPeriod(Long fromDate) {
-        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate)
-                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Data.ChartItem::getTime))));
+        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
         return this;
     }
 
@@ -37,7 +30,7 @@ public class IbcVolumeChart {
     public static class Data {
 
         private String zone;
-        private TreeSet<ChartItem> chart;
+        private List<ChartItem> chart;
 
         @Getter
         @Setter
