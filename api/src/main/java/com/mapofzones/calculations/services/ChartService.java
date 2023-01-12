@@ -11,6 +11,7 @@ import com.mapofzones.calculations.repository.entities.TxsChart;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static java.time.ZoneOffset.UTC;
@@ -45,7 +46,17 @@ public class ChartService implements IChartService {
 
     @Override
     public IbcVolumeChart findIbcVolumeChart(String zone, String period) {
-        return ibcVolumeChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        IbcVolumeChart ibcVolumeChart = ibcVolumeChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+
+        BigDecimal totalIbcIn = ibcVolumeChart.getData().getChart().stream().map(IbcVolumeChart.Data.ChartItem::getIbcIn).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalIbcOut = ibcVolumeChart.getData().getChart().stream().map(IbcVolumeChart.Data.ChartItem::getIbcOut).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalIbc = ibcVolumeChart.getData().getChart().stream().map(IbcVolumeChart.Data.ChartItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        ibcVolumeChart.getData().setTotalIbcIn(totalIbcIn);
+        ibcVolumeChart.getData().setTotalIbcOut(totalIbcOut);
+        ibcVolumeChart.getData().setTotalIbc(totalIbc);
+
+        return ibcVolumeChart;
     }
 
     @Override

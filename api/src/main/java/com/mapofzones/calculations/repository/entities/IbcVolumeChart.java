@@ -30,6 +30,9 @@ public class IbcVolumeChart {
     public static class Data {
 
         private String zone;
+        private BigDecimal totalIbcIn;
+        private BigDecimal totalIbcOut;
+        private BigDecimal totalIbc;
         private List<ChartItem> chart;
 
         @Getter
