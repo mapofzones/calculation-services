@@ -1,6 +1,7 @@
 package com.mapofzones.calculations.schedulers;
 
-import com.mapofzones.calculations.delegationamount.service.DelegationsAmountService;
+import com.mapofzones.calculations.activeaddresses.service.ActiveAddressesService;
+import com.mapofzones.calculations.delegationamount.service.DelegationsService;
 import com.mapofzones.calculations.ibctransfers.services.IbcTransferService;
 import com.mapofzones.calculations.ibcvolume.services.IbcVolumeService;
 import com.mapofzones.calculations.transactions.services.TxsService;
@@ -12,28 +13,31 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class Scheduler {
 
-    private final DelegationsAmountService delegationsAmountService;
+    private final DelegationsService delegationsService;
     private final IbcVolumeService ibcVolumeService;
     private final TxsService txsService;
     private final IbcTransferService ibcTransferService;
+    private final ActiveAddressesService activeAddressesService;
 
-    public Scheduler(DelegationsAmountService delegationsAmountService,
+    public Scheduler(DelegationsService delegationsService,
                      IbcVolumeService ibcVolumeService,
                      TxsService txsService,
-                     IbcTransferService ibcTransferService) {
-        this.delegationsAmountService = delegationsAmountService;
+                     IbcTransferService ibcTransferService,
+                     ActiveAddressesService activeAddressesService) {
+        this.delegationsService = delegationsService;
         this.ibcVolumeService = ibcVolumeService;
         this.txsService = txsService;
         this.ibcTransferService = ibcTransferService;
+        this.activeAddressesService = activeAddressesService;
     }
 
 
 //    @Scheduled(cron = "0 55 * * * *")
     @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
-    public void delegationsAmountCalculation() {
-        log.info("Start: delegationsAmountCalculation");
-        delegationsAmountService.doCalculation();
-        log.info("Finish: delegationsAmountCalculation");
+    public void delegationsCalculation() {
+        log.info("Start: delegationsCalculation");
+        delegationsService.doCalculation();
+        log.info("Finish: delegationsCalculation");
     }
 
     @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
@@ -56,4 +60,11 @@ public class Scheduler {
         ibcTransferService.doCalculation();
         log.info("Finish: ibcTransfersCountCalculation");
     }
+
+//    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
+//    public void activeAddressesCalculation() {
+//        log.info("Start: activeAddressesCalculation");
+//        activeAddressesService.doCalculation();
+//        log.info("Finish: activeAddressesCalculation");
+//    }
 }

@@ -1,8 +1,34 @@
 package com.mapofzones.calculations.common.domain;
 
-public class ZoneChartEntity extends MongoEntity {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-    public String zone;
-    public Long updateTime;
+import java.time.LocalDate;
 
+@Getter
+@Setter
+@NoArgsConstructor
+public class ZoneChartEntity extends AbstractMongoEntity {
+
+    @Getter
+    @Setter
+    public static class AbstractData {
+        public AbstractData(String zone) {
+            this.zone = zone;
+        }
+        private String zone;
+        @CreationTimestamp
+        private LocalDate updateTime;
+
+        @Getter
+        @Setter
+        public static class AbstractChartItem {
+            public AbstractChartItem(Long time) {
+                this.time = time;
+            }
+            public Long time;
+        }
+    }
 }

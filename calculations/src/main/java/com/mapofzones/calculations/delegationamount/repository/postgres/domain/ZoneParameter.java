@@ -22,4 +22,7 @@ public class ZoneParameter extends ParameterEntity {
     @Column(name = "DELEGATION_AMOUNT")
     private BigDecimal delegationAmount;
 
+    @Column(name = "UNDELEGATION_AMOUNT")
+    private BigDecimal undelegationAmount;
+
 }

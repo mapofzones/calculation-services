@@ -5,7 +5,7 @@ import com.mapofzones.calculations.common.repository.postgres.domain.TokensRepos
 import com.mapofzones.calculations.common.repository.postgres.domain.Zone;
 import com.mapofzones.calculations.common.repository.postgres.domain.ZoneRepository;
 import com.mapofzones.calculations.delegationamount.repository.mongo.MongoChartRepository;
-import com.mapofzones.calculations.delegationamount.repository.mongo.domain.DelegationsAmountChart;
+import com.mapofzones.calculations.delegationamount.repository.mongo.domain.DelegationsChart;
 import com.mapofzones.calculations.delegationamount.repository.postgres.ZoneParametersRepository;
 import com.mapofzones.calculations.delegationamount.repository.postgres.domain.ZoneParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.List;
 import static com.mapofzones.calculations.common.constants.CommonConst.START_HOURS_AGO;
 
 @Service
-public class DelegationsAmountService {
+public class DelegationsService {
 
     @Autowired
     private ZoneParametersRepository zoneParametersRepository;
@@ -46,23 +46,26 @@ public class DelegationsAmountService {
     }
 
     public void doCalculation(String zone) {
-        List<ZoneParameter> zoneParametersList = findDelegationsAmountForLastPeriod(zone, START_HOURS_AGO);
+        List<ZoneParameter> zoneParametersList = findParametersForLastPeriod(zone, START_HOURS_AGO);
         Token token = findMainTokenByZone(zone);
 
-        DelegationsAmountChart delegationsAmountChart = new DelegationsAmountChart(zone);
+        DelegationsChart delegationsChart = new DelegationsChart(zone);
 
 
         for (ZoneParameter zoneParameter : zoneParametersList) {
 
-            if (!(zoneParameter.getDelegationAmount() == null || zoneParameter.getDelegationAmount().equals(BigDecimal.ZERO)) && !(token == null || token.getExponent() == null)) {
-                DelegationsAmountChart.Data.Chart chart = new DelegationsAmountChart.Data.Chart();
+            if (!(zoneParameter.getDelegationAmount() == null || zoneParameter.getDelegationAmount().equals(BigDecimal.ZERO)
+                    || zoneParameter.getUndelegationAmount() == null || zoneParameter.getUndelegationAmount().equals(BigDecimal.ZERO))
+                    && !(token == null || token.getExponent() == null)) {
+                DelegationsChart.Data.Chart chart = new DelegationsChart.Data.Chart();
                 chart.setTime(zoneParameter.getZoneParametersId().getDatetime().toEpochSecond(ZoneOffset.UTC));
-                chart.setValue(zoneParameter.getDelegationAmount().divide(BigDecimal.valueOf(Math.pow(10, token.getExponent()))));
-                delegationsAmountChart.getData().getChart().add(chart);
+                chart.setDelegationAmount(zoneParameter.getDelegationAmount().divide(BigDecimal.valueOf(Math.pow(10, token.getExponent()))));
+                chart.setUndelegationAmount(zoneParameter.getUndelegationAmount().divide(BigDecimal.valueOf(Math.pow(10, token.getExponent()))));
+                delegationsChart.getData().getChart().add(chart);
             }
         }
 
-        update(delegationsAmountChart);
+        update(delegationsChart);
     }
 
     @Transactional
@@ -71,14 +74,14 @@ public class DelegationsAmountService {
     }
 
     @Transactional
-    protected void update(DelegationsAmountChart delegationsAmountChart) {
+    protected void update(DelegationsChart delegationsChart) {
         System.out.println("Start update");
-        mongoChartRepository.save(delegationsAmountChart);
+        mongoChartRepository.save(delegationsChart);
         System.out.println("Finish update");
     }
 
     @Transactional("postgresTransactionManager")
-    protected List<ZoneParameter> findDelegationsAmountForLastPeriod(String zone, long hours) {
+    protected List<ZoneParameter> findParametersForLastPeriod(String zone, long hours) {
         return zoneParametersRepository.findAllByZoneForLastPeriod(zone, LocalDateTime.now().minus(hours, ChronoUnit.HOURS));
     }
 

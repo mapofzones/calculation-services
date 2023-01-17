@@ -1,12 +1,10 @@
 package com.mapofzones.calculations.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -22,7 +20,8 @@ import java.util.HashMap;
         "com.mapofzones.calculations.delegationamount.repository.postgres",
         "com.mapofzones.calculations.ibcvolume.repository.postgres",
         "com.mapofzones.calculations.transactions.repository.postgres",
-        "com.mapofzones.calculations.ibctransfers.repository.postgres"
+        "com.mapofzones.calculations.ibctransfers.repository.postgres",
+        "com.mapofzones.calculations.activeaddresses.repository.postgres"
 },
         entityManagerFactoryRef = "postgresEntityManager",
         transactionManagerRef = "postgresTransactionManager")
@@ -38,7 +37,8 @@ public class ConfigPostgresRepository {
                 "com.mapofzones.calculations.ibcvolume.repository.postgres",
                 "com.mapofzones.calculations.common.repository.postgres",
                 "com.mapofzones.calculations.transactions.repository.postgres",
-                "com.mapofzones.calculations.ibctransfers.repository.postgres"
+                "com.mapofzones.calculations.ibctransfers.repository.postgres",
+                "com.mapofzones.calculations.activeaddresses.repository.postgres"
         );
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

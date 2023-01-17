@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
         "com.mapofzones.calculations.delegationamount.repository.mongo",
         "com.mapofzones.calculations.ibcvolume.repository.mongo",
         "com.mapofzones.calculations.transactions.repository.mongo",
-        "com.mapofzones.calculations.ibctransfers.repository.mongo"
+        "com.mapofzones.calculations.ibctransfers.repository.mongo",
+        "com.mapofzones.calculations.activeaddresses.repository.mongo",
 })
 public class MongoConfig  {
 

@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @Document(collection = "delegationsAmountChart")
-public class DelegationsAmountChart {
+public class DelegationsChart {
 
     private Data data;
 
-    public DelegationsAmountChart(String zone) {
+    public DelegationsChart(String zone) {
         this.data = new Data(zone);
         this.data.setChart(new ArrayList<>());
     }
@@ -37,11 +37,12 @@ public class DelegationsAmountChart {
         @Setter
         public static class Chart {
             public Long time;
-            public BigDecimal value;
+            public BigDecimal delegationAmount;
+            public BigDecimal undelegationAmount;
         }
     }
 
-    public DelegationsAmountChart withPeriod(Long fromDate) {
+    public DelegationsChart withPeriod(Long fromDate) {
         this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
         return this;
     }
