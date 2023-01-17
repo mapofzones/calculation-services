@@ -21,6 +21,11 @@ public class ChartController {
         return new ResponseEntity<>(chartService.findDelegationAmountChart(zone, period), HttpStatus.OK);
     }
 
+    @GetMapping("/api/beta/delegatorCountChart/{zone}/{period}")
+    public ResponseEntity<?> findDelegatorsCountChart(@PathVariable String zone, @PathVariable String period) {
+        return new ResponseEntity<>(chartService.findDelegatorsCountChart(zone, period), HttpStatus.OK);
+    }
+
     @GetMapping("/api/beta/ibcTransferChart/{zone}/{period}")
     public ResponseEntity<?> findIbcTransferChart(@PathVariable String zone, @PathVariable String period) {
         return new ResponseEntity<>(chartService.findIbcTransferChart(zone, period), HttpStatus.OK);

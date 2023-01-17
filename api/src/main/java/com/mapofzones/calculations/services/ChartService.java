@@ -1,10 +1,12 @@
 package com.mapofzones.calculations.services;
 
-import com.mapofzones.calculations.repository.DelegationsRepository;
+import com.mapofzones.calculations.repository.DelegationsChartRepository;
+import com.mapofzones.calculations.repository.DelegatorsCountChartRepository;
 import com.mapofzones.calculations.repository.IbcTransferChartRepository;
 import com.mapofzones.calculations.repository.IbcVolumeChartRepository;
 import com.mapofzones.calculations.repository.TxsChartRepository;
 import com.mapofzones.calculations.repository.entities.DelegationsAmountChart;
+import com.mapofzones.calculations.repository.entities.DelegatorsCountChart;
 import com.mapofzones.calculations.repository.entities.IbcTransferChart;
 import com.mapofzones.calculations.repository.entities.IbcVolumeChart;
 import com.mapofzones.calculations.repository.entities.TxsChart;
@@ -19,16 +21,19 @@ import static java.time.ZoneOffset.UTC;
 @Service
 public class ChartService implements IChartService {
 
-    private final DelegationsRepository delegationsRepository;
+    private final DelegationsChartRepository delegationsChartRepository;
+    private final DelegatorsCountChartRepository delegatorsCountChartRepository;
     private final IbcTransferChartRepository ibcTransferChartRepository;
     private final IbcVolumeChartRepository ibcVolumeChartRepository;
     private final TxsChartRepository txsChartRepository;
 
-    public ChartService(DelegationsRepository delegationsRepository,
+    public ChartService(DelegationsChartRepository delegationsChartRepository,
+                        DelegatorsCountChartRepository delegatorsCountChartRepository,
                         IbcTransferChartRepository ibcTransferChartRepository,
                         IbcVolumeChartRepository ibcVolumeChartRepository,
                         TxsChartRepository txsChartRepository) {
-        this.delegationsRepository = delegationsRepository;
+        this.delegationsChartRepository = delegationsChartRepository;
+        this.delegatorsCountChartRepository = delegatorsCountChartRepository;
         this.ibcTransferChartRepository = ibcTransferChartRepository;
         this.ibcVolumeChartRepository = ibcVolumeChartRepository;
         this.txsChartRepository = txsChartRepository;
@@ -36,7 +41,12 @@ public class ChartService implements IChartService {
 
     @Override
     public DelegationsAmountChart findDelegationAmountChart(String zone, String period) {
-        return delegationsRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        return delegationsChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+    }
+
+    @Override
+    public DelegatorsCountChart findDelegatorsCountChart(String zone, String period) {
+        return delegatorsCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
     }
 
     @Override
@@ -61,7 +71,10 @@ public class ChartService implements IChartService {
 
     @Override
     public TxsChart findTxsChart(String zone, String period) {
-        return txsChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        TxsChart txsChart = txsChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        Integer totalTxsCount = txsChart.getData().getChart().stream().map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum);
+        txsChart.getData().setTotalTxsCount(totalTxsCount);
+        return txsChart;
     }
 
     private Long fromTime(String period) {

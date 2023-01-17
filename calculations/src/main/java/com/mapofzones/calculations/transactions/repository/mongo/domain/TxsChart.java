@@ -38,12 +38,7 @@ public class TxsChart {
         @Setter
         public static class ChartItem {
             private Long time;
-            private BigInteger value;
+            private Integer txsCount;
         }
-    }
-
-    public TxsChart withPeriod(Long fromDate) {
-        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
-        return this;
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection = "delegationsAmountChart")
+@Document(collection = "delegationsChart")
 public class DelegationsAmountChart {
 
     private Data data;
@@ -28,7 +28,8 @@ public class DelegationsAmountChart {
         @Setter
         public static class Chart {
             public Long time;
-            public BigDecimal value;
+            public BigDecimal delegationAmount;
+            public BigDecimal undelegationAmount;
         }
     }
 

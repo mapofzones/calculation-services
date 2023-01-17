@@ -37,12 +37,12 @@ public class Scheduler {
 
 
 //    @Scheduled(cron = "0 55 * * * *")
-//    @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
-//    public void delegationsCalculation() {
-//        log.info("Start: delegationsCalculation");
-//        delegationsService.doCalculation();
-//        log.info("Finish: delegationsCalculation");
-//    }
+    @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
+    public void delegationsCalculation() {
+        log.info("Start: delegationsCalculation");
+        delegationsService.doCalculation();
+        log.info("Finish: delegationsCalculation");
+    }
 
     //    @Scheduled(cron = "0 55 * * * *")
     @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
@@ -52,26 +52,26 @@ public class Scheduler {
         log.info("Finish: delegationsCalculation");
     }
 
-//    @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
-//    public void ibcVolumeCalculation() {
-//        log.info("Start: ibcVolumeCalculation");
-//        ibcVolumeService.doCalculation();
-//        log.info("Finish: ibcVolumeCalculation");
-//    }
-//
-//    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
-//    public void txsCountCalculation() {
-//        log.info("Start: txsCountCalculation");
-//        txsService.doCalculation();
-//        log.info("Finish: txsCountCalculation");
-//    }
-//
-//    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
-//    public void ibcTransfersCountCalculation() {
-//        log.info("Start: ibcTransfersCountCalculation");
-//        ibcTransferService.doCalculation();
-//        log.info("Finish: ibcTransfersCountCalculation");
-//    }
+    @Scheduled(fixedDelayString = "3600000", initialDelay = 10000)
+    public void ibcVolumeCalculation() {
+        log.info("Start: ibcVolumeCalculation");
+        ibcVolumeService.doCalculation();
+        log.info("Finish: ibcVolumeCalculation");
+    }
+
+    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
+    public void txsCountCalculation() {
+        log.info("Start: txsCountCalculation");
+        txsService.doCalculation();
+        log.info("Finish: txsCountCalculation");
+    }
+
+    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
+    public void ibcTransfersCountCalculation() {
+        log.info("Start: ibcTransfersCountCalculation");
+        ibcTransferService.doCalculation();
+        log.info("Finish: ibcTransfersCountCalculation");
+    }
 
 //    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
 //    public void activeAddressesCalculation() {

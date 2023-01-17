@@ -35,13 +35,13 @@ public class TxsCalculation {
         for (Map.Entry<String, Zone> zoneEntry : zonesMap.entrySet()) {
             TxsChart zoneChart = new TxsChart(zoneEntry.getKey());
             for (Map.Entry<LocalDateTime, List<Zone.Time>> timeEntry : zoneEntry.getValue().timeMap.entrySet()) {
-                BigInteger txsCount = BigInteger.ZERO;
+                int txsCount = 0;
                 for (Zone.Time time : timeEntry.getValue()) {
-                    txsCount = txsCount.add(time.getTxCount());
+                    txsCount = txsCount + time.getTxCount();
                 }
                 TxsChart.Data.ChartItem chartItem = new TxsChart.Data.ChartItem();
                 chartItem.setTime(timeEntry.getKey().toEpochSecond(ZoneOffset.UTC));
-                chartItem.setValue(txsCount);
+                chartItem.setTxsCount(txsCount);
                 zoneChart.getData().getChart().add(chartItem);
             }
             txsCharts.add(zoneChart);
@@ -80,17 +80,12 @@ public class TxsCalculation {
         private static class Time {
 
             LocalDateTime dateTime;
-            BigInteger txCount;
+            Integer txCount;
 
             public Time(Tx tx) {
                 this.dateTime = tx.getId().getDatetime();
-                this.txCount = BigInteger.valueOf(tx.getTxsCount());
-                //addTx(tx);
+                this.txCount = tx.getTxsCount();
             }
-
-//            public void addTx(Tx tx) {
-//                sumTxs = sumTxs.add(BigDecimal.valueOf(tx.getTxsCount()))
-//            }
         }
     }
 }

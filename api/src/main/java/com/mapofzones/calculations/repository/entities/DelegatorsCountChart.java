@@ -1,12 +1,12 @@
-package com.mapofzones.calculations.delegators.repository.mongo.domain;
+package com.mapofzones.calculations.repository.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,18 +16,10 @@ public class DelegatorsCountChart {
 
     private Data data;
 
-    public DelegatorsCountChart(String zone) {
-        this.data = new Data(zone);
-        this.data.setChart(new ArrayList<>());
-    }
-
     @Getter
     @Setter
     @NoArgsConstructor
     public static class Data {
-        public Data(String zone) {
-            this.zone = zone;
-        }
         public String zone;
         public List<Chart> chart;
 
@@ -37,5 +29,10 @@ public class DelegatorsCountChart {
             public Long time;
             public Integer delegatorsCount;
         }
+    }
+
+    public DelegatorsCountChart withPeriod(Long fromDate) {
+        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
+        return this;
     }
 }

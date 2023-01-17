@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,14 +22,14 @@ public class TxsChart {
     public static class Data {
 
         private String zone;
-        private BigInteger totalTxsCount;
+        private Integer totalTxsCount;
         private List<ChartItem> chart;
 
         @Getter
         @Setter
         public static class ChartItem {
             private Long time;
-            private BigInteger value;
+            private Integer txsCount;
         }
     }
 
