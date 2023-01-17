@@ -1,6 +1,6 @@
-package com.mapofzones.calculations.delegationamount.repository.mongo;
+package com.mapofzones.calculations.delegations.repository.mongo;
 
-import com.mapofzones.calculations.delegationamount.repository.mongo.domain.DelegationsChart;
+import com.mapofzones.calculations.delegations.repository.mongo.domain.DelegationsChart;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.transaction.annotation.Transactional;

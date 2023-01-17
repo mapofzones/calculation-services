@@ -1,6 +1,6 @@
-package com.mapofzones.calculations.delegationamount.repository.postgres;
+package com.mapofzones.calculations.common.postgres.repository;
 
-import com.mapofzones.calculations.delegationamount.repository.postgres.domain.ZoneParameter;
+import com.mapofzones.calculations.common.domain.ZoneParameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

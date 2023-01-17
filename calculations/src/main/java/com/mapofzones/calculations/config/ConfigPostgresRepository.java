@@ -16,8 +16,9 @@ import java.util.HashMap;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "com.mapofzones.calculations.common.repository.postgres",
-        "com.mapofzones.calculations.delegationamount.repository.postgres",
+        "com.mapofzones.calculations.common.postgres.repository",
+        "com.mapofzones.calculations.delegations.repository.postgres",
+        "com.mapofzones.calculations.delegators.repository.postgres",
         "com.mapofzones.calculations.ibcvolume.repository.postgres",
         "com.mapofzones.calculations.transactions.repository.postgres",
         "com.mapofzones.calculations.ibctransfers.repository.postgres",
@@ -33,9 +34,11 @@ public class ConfigPostgresRepository {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(postgresDataSource);
         em.setPackagesToScan(
-                "com.mapofzones.calculations.delegationamount.repository.postgres",
+                "com.mapofzones.calculations.delegations.repository.postgres",
+                "com.mapofzones.calculations.delegators.repository.postgres",
                 "com.mapofzones.calculations.ibcvolume.repository.postgres",
-                "com.mapofzones.calculations.common.repository.postgres",
+                "com.mapofzones.calculations.common.postgres.repository",
+                "com.mapofzones.calculations.common.domain",
                 "com.mapofzones.calculations.transactions.repository.postgres",
                 "com.mapofzones.calculations.ibctransfers.repository.postgres",
                 "com.mapofzones.calculations.activeaddresses.repository.postgres"

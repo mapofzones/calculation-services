@@ -1,5 +1,6 @@
-package com.mapofzones.calculations.common.repository.postgres.domain;
+package com.mapofzones.calculations.common.postgres.repository;
 
+import com.mapofzones.calculations.common.domain.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

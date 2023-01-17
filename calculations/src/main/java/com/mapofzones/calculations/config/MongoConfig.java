@@ -5,7 +5,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableMongoRepositories(basePackages = {
-        "com.mapofzones.calculations.delegationamount.repository.mongo",
+        "com.mapofzones.calculations.delegations.repository.mongo",
+        "com.mapofzones.calculations.delegators.repository.mongo",
         "com.mapofzones.calculations.ibcvolume.repository.mongo",
         "com.mapofzones.calculations.transactions.repository.mongo",
         "com.mapofzones.calculations.ibctransfers.repository.mongo",

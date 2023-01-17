@@ -1,6 +1,5 @@
-package com.mapofzones.calculations.delegationamount.repository.postgres.domain;
+package com.mapofzones.calculations.common.domain;
 
-import com.mapofzones.calculations.common.domain.ParameterEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -24,5 +23,8 @@ public class ZoneParameter extends ParameterEntity {
 
     @Column(name = "UNDELEGATION_AMOUNT")
     private BigDecimal undelegationAmount;
+
+    @Column(name = "DELEGATORS_COUNT")
+    private Integer delegatorsCount;
 
 }

@@ -1,4 +1,4 @@
-package com.mapofzones.calculations.common.repository.postgres.domain;
+package com.mapofzones.calculations.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

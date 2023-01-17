@@ -1,13 +1,13 @@
-package com.mapofzones.calculations.delegationamount.service;
+package com.mapofzones.calculations.delegations.service;
 
-import com.mapofzones.calculations.common.repository.postgres.domain.Token;
-import com.mapofzones.calculations.common.repository.postgres.domain.TokensRepository;
-import com.mapofzones.calculations.common.repository.postgres.domain.Zone;
-import com.mapofzones.calculations.common.repository.postgres.domain.ZoneRepository;
-import com.mapofzones.calculations.delegationamount.repository.mongo.MongoChartRepository;
-import com.mapofzones.calculations.delegationamount.repository.mongo.domain.DelegationsChart;
-import com.mapofzones.calculations.delegationamount.repository.postgres.ZoneParametersRepository;
-import com.mapofzones.calculations.delegationamount.repository.postgres.domain.ZoneParameter;
+import com.mapofzones.calculations.common.domain.Token;
+import com.mapofzones.calculations.common.domain.Zone;
+import com.mapofzones.calculations.common.domain.ZoneParameter;
+import com.mapofzones.calculations.common.postgres.repository.ZoneRepository;
+import com.mapofzones.calculations.common.postgres.repository.TokensRepository;
+import com.mapofzones.calculations.common.postgres.repository.ZoneParametersRepository;
+import com.mapofzones.calculations.delegations.repository.mongo.MongoChartRepository;
+import com.mapofzones.calculations.delegations.repository.mongo.domain.DelegationsChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

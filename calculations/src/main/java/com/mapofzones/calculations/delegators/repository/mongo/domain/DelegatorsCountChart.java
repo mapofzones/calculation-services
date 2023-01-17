@@ -1,24 +1,22 @@
-package com.mapofzones.calculations.delegationamount.repository.mongo.domain;
+package com.mapofzones.calculations.delegators.repository.mongo.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection = "delegationsAmountChart")
-public class DelegationsChart {
+@Document(collection = "delegatorsCount")
+public class DelegatorsCountChart {
 
     private Data data;
 
-    public DelegationsChart(String zone) {
+    public DelegatorsCountChart(String zone) {
         this.data = new Data(zone);
         this.data.setChart(new ArrayList<>());
     }
@@ -37,15 +35,7 @@ public class DelegationsChart {
         @Setter
         public static class Chart {
             public Long time;
-            public BigDecimal delegationAmount;
-            public BigDecimal undelegationAmount;
+            public Integer delegatorsCount;
         }
     }
-
-    public DelegationsChart withPeriod(Long fromDate) {
-        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
-        return this;
-    }
-
-
 }
