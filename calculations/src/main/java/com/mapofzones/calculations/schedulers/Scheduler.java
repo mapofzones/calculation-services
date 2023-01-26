@@ -73,10 +73,10 @@ public class Scheduler {
         log.info("Finish: ibcTransfersCountCalculation");
     }
 
-//    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
-//    public void activeAddressesCalculation() {
-//        log.info("Start: activeAddressesCalculation");
-//        activeAddressesService.doCalculation();
-//        log.info("Finish: activeAddressesCalculation");
-//    }
+    @Scheduled(fixedDelayString = "3600000", initialDelay = 1000)
+    public void activeAddressesCalculation() {
+        log.info("Start: activeAddressesCalculation");
+        activeAddressesService.doCalculation();
+        log.info("Finish: activeAddressesCalculation");
+    }
 }

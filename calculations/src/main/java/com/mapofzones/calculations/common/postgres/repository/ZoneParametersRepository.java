@@ -13,7 +13,7 @@ public interface ZoneParametersRepository extends JpaRepository<ZoneParameter, Z
 
     @Query(value = """
             FROM ZoneParameter zp \
-            WHERE zp.zoneParametersId.zone = ?1 AND zp.zoneParametersId.datetime > ?2 \
+            WHERE zp.zoneParametersId.zone = ?1 AND zp.zoneParametersId.datetime >= ?2 \
             ORDER BY zp.zoneParametersId.datetime ASC
             """)
     List<ZoneParameter> findAllByZoneForLastPeriod(String zone, LocalDateTime timeUntilNow);

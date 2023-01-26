@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface IbcTransferRepository extends JpaRepository<IbcTransfer, IbcTransfer.IbcTransferId> {
 
-    @Query("FROM IbcTransfer tr WHERE tr.id.datetime > ?1 ORDER BY tr.id.datetime")
+    @Query("FROM IbcTransfer tr WHERE tr.id.datetime >= ?1 ORDER BY tr.id.datetime")
     List<IbcTransfer> findAllForLastPeriod(LocalDateTime period);
 }

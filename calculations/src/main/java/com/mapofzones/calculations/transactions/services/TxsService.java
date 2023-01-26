@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.mapofzones.calculations.common.constants.CommonConst.START_HOURS_AGO;
+import static com.mapofzones.calculations.common.constants.CommonConst.HOURS_IN_MONTH;
 
 @Service
 public class TxsService {
@@ -26,7 +26,7 @@ public class TxsService {
 
 
     public void doCalculation() {
-        List<Tx> txList = findAllForLastPeriod(START_HOURS_AGO);
+        List<Tx> txList = findAllForLastPeriod(HOURS_IN_MONTH);
         List<TxsChart> txsCharts = TxsCalculation.buildChart(txList);
         update(txsCharts);
     }

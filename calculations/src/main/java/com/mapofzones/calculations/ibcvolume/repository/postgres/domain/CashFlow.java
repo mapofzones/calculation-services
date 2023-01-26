@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
                         JOIN derivatives d ON cf.derivative_denom = d.full_denom and cf.zone = d.zone \
                         JOIN tokens t on d.base_denom = t.base_denom and d.origin_zone = t.zone \
                         JOIN token_prices tp on t.base_denom = tp.base_denom and t.zone = tp.zone and cf.hour = tp.datetime \
-                        WHERE cf.hour > ?1 ORDER BY cf.hour
+                        WHERE cf.hour >= ?1 ORDER BY cf.hour
                     """)
 @SqlResultSetMapping(name = "CashFlowTokenMapping",
     classes = {

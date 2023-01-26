@@ -1,7 +1,6 @@
 package com.mapofzones.calculations.activeaddresses.repository.mongo.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,25 +9,20 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@Document("activeAddressesCountChart")
-public class ActiveAddressesChart {
+@Document("interchainActiveAddressesCountChart")
+public class InterchainActiveAddressesChart {
 
     private Data data;
 
-    public ActiveAddressesChart(String zone) {
-        this.data = new Data(zone);
+    public InterchainActiveAddressesChart() {
+        this.data = new InterchainActiveAddressesChart.Data();
         this.data.setChart(new ArrayList<>());
     }
 
     @Getter
     @Setter
     public static class Data {
-        public Data(String zone) {
-            this.zone = zone;
-        }
 
-        private String zone;
         private List<ChartItem> chart;
 
         @Getter
@@ -39,8 +33,7 @@ public class ActiveAddressesChart {
             }
 
             public Long time;
-            public Integer activeAddressesCount;
-            public Integer ibcActiveAddressesCount;
+            public Integer interchainActiveAddressesCount;
         }
     }
 }

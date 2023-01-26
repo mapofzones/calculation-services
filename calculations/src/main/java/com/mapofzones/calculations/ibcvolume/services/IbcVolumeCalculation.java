@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.mapofzones.calculations.common.constants.CommonConst.START_HOURS_AGO;
+import static com.mapofzones.calculations.common.constants.CommonConst.HOURS_IN_MONTH;
 
 public class IbcVolumeCalculation {
 
@@ -68,7 +68,7 @@ public class IbcVolumeCalculation {
     }
 
     private void fillGaps(IbcVolumeChart chart) {
-        LocalDateTime current = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).minus(START_HOURS_AGO, ChronoUnit.HOURS);
+        LocalDateTime current = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).minus(HOURS_IN_MONTH, ChronoUnit.HOURS);
         LocalDateTime end = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
 
         while (current.isBefore(end) || current.isEqual(end)) {

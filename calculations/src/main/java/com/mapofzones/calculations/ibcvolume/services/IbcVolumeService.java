@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.mapofzones.calculations.common.constants.CommonConst.START_HOURS_AGO;
+import static com.mapofzones.calculations.common.constants.CommonConst.HOURS_IN_MONTH;
 
 @Service
 public class IbcVolumeService {
@@ -25,7 +25,7 @@ public class IbcVolumeService {
 
 
     public void doCalculation() {
-        List<CashFlowToken> cashFlowTokenList = findAllForLastPeriod(START_HOURS_AGO);
+        List<CashFlowToken> cashFlowTokenList = findAllForLastPeriod(HOURS_IN_MONTH);
         List<IbcVolumeChart> ibcVolumeChart = IbcVolumeCalculation.buildChart(cashFlowTokenList);
         update(ibcVolumeChart);
     }

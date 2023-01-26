@@ -4,5 +4,4 @@ import com.mapofzones.calculations.activeaddresses.repository.mongo.domain.Activ
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ActiveAddressesChartRepository extends MongoRepository<ActiveAddressesChart, String> {
-
 }
