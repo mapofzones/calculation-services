@@ -94,7 +94,10 @@ public class ChartService implements IChartService {
 
     @Override
     public ActiveAddressesCountChart findActiveAddressesCountChart(String zone, String period) {
-        return activeAddressesCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        ActiveAddressesCountStats stats = activeAddressesCountStatsRepository.findByData_Zone(zone);
+        chart.setTotalActiveAddressesCountStats(stats);
+        return chart;
     }
 
     @Override
