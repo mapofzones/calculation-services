@@ -41,4 +41,18 @@ public class ChartController {
         return new ResponseEntity<>(chartService.findTxsChart(zone, period), HttpStatus.OK);
     }
 
+    @GetMapping("/api/beta/activeAddressesCountChart/{zone}/{period}")
+    public ResponseEntity<?> findActiveAddressesCountChart(@PathVariable String zone, @PathVariable String period) {
+        return new ResponseEntity<>(chartService.findActiveAddressesCountChart(zone, period), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/beta/activeAddressesCountStats/{zone}")
+    public ResponseEntity<?> findActiveAddressesCountStats(@PathVariable String zone) {
+        return new ResponseEntity<>(chartService.findActiveAddressesCountStats(zone), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/beta/interchainActiveAddressesCountStats")
+    public ResponseEntity<?> findInterchainActiveAddressesCountStats() {
+        return new ResponseEntity<>(chartService.findInterchainActiveAddressesCountStats(), HttpStatus.OK);
+    }
 }

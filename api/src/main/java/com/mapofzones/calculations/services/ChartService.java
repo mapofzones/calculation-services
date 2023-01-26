@@ -1,14 +1,20 @@
 package com.mapofzones.calculations.services;
 
+import com.mapofzones.calculations.repository.ActiveAddressesCountChartRepository;
+import com.mapofzones.calculations.repository.ActiveAddressesCountStatsRepository;
 import com.mapofzones.calculations.repository.DelegationsChartRepository;
 import com.mapofzones.calculations.repository.DelegatorsCountChartRepository;
 import com.mapofzones.calculations.repository.IbcTransferChartRepository;
 import com.mapofzones.calculations.repository.IbcVolumeChartRepository;
+import com.mapofzones.calculations.repository.InterchainActiveAddressesCountStatsRepository;
 import com.mapofzones.calculations.repository.TxsChartRepository;
+import com.mapofzones.calculations.repository.entities.ActiveAddressesCountChart;
+import com.mapofzones.calculations.repository.entities.ActiveAddressesCountStats;
 import com.mapofzones.calculations.repository.entities.DelegationsAmountChart;
 import com.mapofzones.calculations.repository.entities.DelegatorsCountChart;
 import com.mapofzones.calculations.repository.entities.IbcTransferChart;
 import com.mapofzones.calculations.repository.entities.IbcVolumeChart;
+import com.mapofzones.calculations.repository.entities.InterchainActiveAddressesCountStats;
 import com.mapofzones.calculations.repository.entities.TxsChart;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.stereotype.Service;
@@ -26,17 +32,26 @@ public class ChartService implements IChartService {
     private final IbcTransferChartRepository ibcTransferChartRepository;
     private final IbcVolumeChartRepository ibcVolumeChartRepository;
     private final TxsChartRepository txsChartRepository;
+    private final ActiveAddressesCountChartRepository activeAddressesCountChartRepository;
+    private final ActiveAddressesCountStatsRepository activeAddressesCountStatsRepository;
+    private final InterchainActiveAddressesCountStatsRepository interchainActiveAddressesCountStatsRepository;
 
     public ChartService(DelegationsChartRepository delegationsChartRepository,
                         DelegatorsCountChartRepository delegatorsCountChartRepository,
                         IbcTransferChartRepository ibcTransferChartRepository,
                         IbcVolumeChartRepository ibcVolumeChartRepository,
-                        TxsChartRepository txsChartRepository) {
+                        TxsChartRepository txsChartRepository,
+                        ActiveAddressesCountChartRepository activeAddressesCountChartRepository,
+                        ActiveAddressesCountStatsRepository activeAddressesCountStatsRepository,
+                        InterchainActiveAddressesCountStatsRepository interchainActiveAddressesCountStatsRepository) {
         this.delegationsChartRepository = delegationsChartRepository;
         this.delegatorsCountChartRepository = delegatorsCountChartRepository;
         this.ibcTransferChartRepository = ibcTransferChartRepository;
         this.ibcVolumeChartRepository = ibcVolumeChartRepository;
         this.txsChartRepository = txsChartRepository;
+        this.activeAddressesCountChartRepository = activeAddressesCountChartRepository;
+        this.activeAddressesCountStatsRepository = activeAddressesCountStatsRepository;
+        this.interchainActiveAddressesCountStatsRepository = interchainActiveAddressesCountStatsRepository;
     }
 
     @Override
@@ -75,6 +90,21 @@ public class ChartService implements IChartService {
         Integer totalTxsCount = txsChart.getData().getChart().stream().map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum);
         txsChart.getData().setTotalTxsCount(totalTxsCount);
         return txsChart;
+    }
+
+    @Override
+    public ActiveAddressesCountChart findActiveAddressesCountChart(String zone, String period) {
+        return activeAddressesCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+    }
+
+    @Override
+    public ActiveAddressesCountStats findActiveAddressesCountStats(String zone) {
+        return activeAddressesCountStatsRepository.findByData_Zone(zone);
+    }
+
+    @Override
+    public InterchainActiveAddressesCountStats findInterchainActiveAddressesCountStats() {
+        return interchainActiveAddressesCountStatsRepository.findAll().get(0);
     }
 
     private Long fromTime(String period) {
