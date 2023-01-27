@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IbcTransferChartRepository extends MongoRepository<IbcTransferChart, String> {
 
     @Transactional
-    //@Query("{'data.zone': {$eq: ?0}}")
-    IbcTransferChart findByData_Zone(String zone);
+    @Query(value = "{'data.zone': '?0'}", fields = "{'data.chart': {$slice: ?1}}")
+    IbcTransferChart findByZoneAndPeriod(String zone, Long period);
 
 }

@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.mapofzones.calculations.common.CommonConst.HOURS_IN_DAY;
+import static com.mapofzones.calculations.common.CommonConst.HOURS_IN_WEEK;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,13 +20,18 @@ public class ActiveAddressesCountChart {
 
     private Data data;
 
-    public void setTotalActiveAddressesCountStats(ActiveAddressesCountStats stats) {
-        this.data.totalActiveAddressesDay = stats.getData().getStats().getTotalActiveAddressesDay();
-        this.data.totalActiveAddressesWeek = stats.getData().getStats().getTotalActiveAddressesWeek();
-        this.data.totalActiveAddressesMonth = stats.getData().getStats().getTotalActiveAddressesMonth();
-        this.data.totalIbcActiveAddressesDay = stats.getData().getStats().getTotalIbcActiveAddressesDay();
-        this.data.totalIbcActiveAddressesWeek = stats.getData().getStats().getTotalIbcActiveAddressesWeek();
-        this.data.totalIbcActiveAddressesMonth = stats.getData().getStats().getTotalIbcActiveAddressesMonth();
+    public void setTotalActiveAddressesCountStats(ActiveAddressesCountStats stats, Long period) {
+
+        if (period <= HOURS_IN_DAY) {
+            this.data.totalActiveAddresses = stats.getData().getStats().getTotalActiveAddressesDay();
+            this.data.totalIbcActiveAddresses = stats.getData().getStats().getTotalIbcActiveAddressesDay();
+        } else if (period <= HOURS_IN_WEEK) {
+            this.data.totalActiveAddresses = stats.getData().getStats().getTotalActiveAddressesWeek();
+            this.data.totalIbcActiveAddresses = stats.getData().getStats().getTotalIbcActiveAddressesWeek();
+        } else {
+            this.data.totalActiveAddresses = stats.getData().getStats().getTotalActiveAddressesMonth();
+            this.data.totalIbcActiveAddresses = stats.getData().getStats().getTotalIbcActiveAddressesMonth();
+        }
     }
 
     @Getter
@@ -31,12 +39,8 @@ public class ActiveAddressesCountChart {
     @NoArgsConstructor
     public static class Data {
         private String zone;
-        private Integer totalActiveAddressesDay;
-        private Integer totalActiveAddressesWeek;
-        private Integer totalActiveAddressesMonth;
-        private Integer totalIbcActiveAddressesDay;
-        private Integer totalIbcActiveAddressesWeek;
-        private Integer totalIbcActiveAddressesMonth;
+        private Integer totalActiveAddresses;
+        private Integer totalIbcActiveAddresses;
         private List<ChartItem> chart;
 
         @Getter
@@ -46,10 +50,5 @@ public class ActiveAddressesCountChart {
             private Integer activeAddressesCount;
             private Integer ibcActiveAddressesCount;
         }
-    }
-
-    public ActiveAddressesCountChart withPeriod(Long fromDate) {
-        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
-        return this;
     }
 }

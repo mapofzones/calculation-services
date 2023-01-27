@@ -46,7 +46,7 @@ public class DelegationsService {
     }
 
     public void doCalculation(String zone) {
-        List<ZoneParameter> zoneParametersList = findParametersForLastPeriod(zone, HOURS_IN_MONTH);
+        List<ZoneParameter> zoneParametersList = findParametersForLastPeriod(zone, HOURS_IN_MONTH + 1);
         Token token = findMainTokenByZone(zone);
 
         DelegationsChart delegationsChart = new DelegationsChart(zone);

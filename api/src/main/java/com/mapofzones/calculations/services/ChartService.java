@@ -20,6 +20,7 @@ import org.springframework.boot.convert.DurationStyle;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 import static java.time.ZoneOffset.UTC;
@@ -56,22 +57,30 @@ public class ChartService implements IChartService {
 
     @Override
     public DelegationsAmountChart findDelegationAmountChart(String zone, String period) {
-        return delegationsChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        return delegationsChartRepository.findByData_Zone(zone).withPeriod(toTime(period));
     }
 
     @Override
     public DelegatorsCountChart findDelegatorsCountChart(String zone, String period) {
-        return delegatorsCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        return delegatorsCountChartRepository.findByData_Zone(zone).withPeriod(toTime(period));
     }
 
     @Override
     public IbcTransferChart findIbcTransferChart(String zone, String period) {
-        return ibcTransferChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        IbcTransferChart ibcTransferChart = ibcTransferChartRepository.findByZoneAndPeriod(zone, -toHours(period));
+
+        BigInteger totalIbsTransfers = ibcTransferChart.getData().getChart().stream().map(IbcTransferChart.Data.ChartItem::getIbcTransfersCount).reduce(BigInteger.ZERO, BigInteger::add);
+        BigInteger totalPending = ibcTransferChart.getData().getChart().stream().map(IbcTransferChart.Data.ChartItem::getPending).reduce(BigInteger.ZERO, BigInteger::add);
+
+        ibcTransferChart.getData().setTotalIbcTransfersCount(totalIbsTransfers);
+        ibcTransferChart.getData().setTotalPending(totalPending);
+
+        return ibcTransferChart;
     }
 
     @Override
     public IbcVolumeChart findIbcVolumeChart(String zone, String period) {
-        IbcVolumeChart ibcVolumeChart = ibcVolumeChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        IbcVolumeChart ibcVolumeChart = ibcVolumeChartRepository.findByData_Zone(zone).withPeriod(toTime(period));
 
         BigDecimal totalIbcIn = ibcVolumeChart.getData().getChart().stream().map(IbcVolumeChart.Data.ChartItem::getIbcIn).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalIbcOut = ibcVolumeChart.getData().getChart().stream().map(IbcVolumeChart.Data.ChartItem::getIbcOut).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -86,7 +95,7 @@ public class ChartService implements IChartService {
 
     @Override
     public TxsChart findTxsChart(String zone, String period) {
-        TxsChart txsChart = txsChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        TxsChart txsChart = txsChartRepository.findByData_Zone(zone).withPeriod(toTime(period));
         Integer totalTxsCount = txsChart.getData().getChart().stream().map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum);
         txsChart.getData().setTotalTxsCount(totalTxsCount);
         return txsChart;
@@ -94,9 +103,10 @@ public class ChartService implements IChartService {
 
     @Override
     public ActiveAddressesCountChart findActiveAddressesCountChart(String zone, String period) {
-        ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByData_Zone(zone).withPeriod(fromTime(period));
+        Long periodInHours = toHours(period);
+        ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByZoneAndPeriod(zone, periodInHours);
         ActiveAddressesCountStats stats = activeAddressesCountStatsRepository.findByData_Zone(zone);
-        chart.setTotalActiveAddressesCountStats(stats);
+        chart.setTotalActiveAddressesCountStats(stats, periodInHours);
         return chart;
     }
 
@@ -110,8 +120,11 @@ public class ChartService implements IChartService {
         return interchainActiveAddressesCountStatsRepository.findAll().get(0);
     }
 
-    private Long fromTime(String period) {
+    private Long toTime(String period) {
         return LocalDateTime.now().minus(DurationStyle.SIMPLE.parse(period)).toEpochSecond(UTC);
     }
 
+    private Long toHours(String period) {
+        return DurationStyle.SIMPLE.parse(period).toHours();
+    }
 }
