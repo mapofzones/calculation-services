@@ -42,7 +42,6 @@ public class TxsCalculation {
                 chartItem.setTime(timeEntry.getKey().toEpochSecond(ZoneOffset.UTC));
                 chartItem.setTxsCount(txsCount);
                 zoneChart.getData().getChart().add(chartItem);
-                zoneChart.getData().setTotalTxsCount(zoneChart.getData().getChart().stream().map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum));
             }
             txsCharts.add(zoneChart);
         }

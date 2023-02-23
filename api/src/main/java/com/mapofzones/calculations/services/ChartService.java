@@ -95,7 +95,12 @@ public class ChartService implements IChartService {
 
     @Override
     public TxsChart findTxsChart(String zone, String period) {
-        return txsChartRepository.findByData_Zone(zone, -toDays(period));
+        TxsChart txsChart = txsChartRepository.findByData_Zone(zone, -toDays(period) - 1);
+        Integer totalTxsCount = txsChart.getData().getChart()
+                .stream().limit(txsChart.getData().getChart().size()-1)
+                .map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum);
+        txsChart.getData().setTotalTxsCount(totalTxsCount);
+        return txsChart;
     }
 
     @Override
