@@ -4,7 +4,7 @@ package com.mapofzones.calculations.transactions.services;
 import com.mapofzones.calculations.transactions.repository.mongo.TxsChartRepository;
 import com.mapofzones.calculations.transactions.repository.mongo.domain.TxsChart;
 import com.mapofzones.calculations.transactions.repository.postgres.TxsRepository;
-import com.mapofzones.calculations.transactions.repository.postgres.domain.Tx;
+import com.mapofzones.calculations.transactions.repository.postgres.domain.CustomTx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +24,8 @@ public class TxsService {
     @Autowired
     private TxsRepository txsRepository;
 
-
     public void doCalculation() {
-        List<Tx> txList = findAllForLastPeriod(HOURS_IN_MONTH);
+        List<CustomTx> txList = findAllForLastPeriod(HOURS_IN_MONTH);
         List<TxsChart> txsCharts = TxsCalculation.buildChart(txList);
         update(txsCharts);
     }
@@ -45,14 +44,12 @@ public class TxsService {
     }
 
     @Transactional("postgresTransactionManager")
-    protected List<Tx> findAllForLastPeriod(long hours) {
+    protected List<CustomTx> findAllForLastPeriod(long hours) {
         try {
-            return txsRepository.findAllForLastPeriod(LocalDateTime.now().minus(hours, ChronoUnit.HOURS));
+            return txsRepository.getTxCount(LocalDateTime.now().minus(hours, ChronoUnit.HOURS), LocalDateTime.now());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
-
 }

@@ -1,12 +1,11 @@
 package com.mapofzones.calculations.transactions.services;
 
 import com.mapofzones.calculations.transactions.repository.mongo.domain.TxsChart;
-import com.mapofzones.calculations.transactions.repository.postgres.domain.Tx;
+import com.mapofzones.calculations.transactions.repository.postgres.domain.CustomTx;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -18,11 +17,11 @@ public class TxsCalculation {
 
     private TxsCalculation() {}
 
-    public static List<TxsChart> buildChart(List<Tx> txList) {
+    public static List<TxsChart> buildChart(List<CustomTx> txList) {
         Map<String, Zone> zonesMap = new TreeMap<>();
-        for (Tx currentTx : txList) {
-            if (zonesMap.containsKey(currentTx.getId().getZone())) {
-                zonesMap.get(currentTx.getId().getZone()).addTime(currentTx);
+        for (CustomTx currentTx : txList) {
+            if (zonesMap.containsKey(currentTx.getZone())) {
+                zonesMap.get(currentTx.getZone()).addTime(currentTx);
             } else {
                 Zone zone = new Zone(currentTx);
                 zonesMap.put(zone.getZone(), zone);
@@ -43,6 +42,7 @@ public class TxsCalculation {
                 chartItem.setTime(timeEntry.getKey().toEpochSecond(ZoneOffset.UTC));
                 chartItem.setTxsCount(txsCount);
                 zoneChart.getData().getChart().add(chartItem);
+                zoneChart.getData().setTotalTxsCount(zoneChart.getData().getChart().stream().map(TxsChart.Data.ChartItem::getTxsCount).reduce(0, Integer::sum));
             }
             txsCharts.add(zoneChart);
         }
@@ -56,13 +56,13 @@ public class TxsCalculation {
         String zone;
         Map<LocalDateTime, List<Time>> timeMap;
 
-        public Zone(Tx tx) {
-            this.zone = tx.getId().getZone();
+        public Zone(CustomTx tx) {
+            this.zone = tx.getZone();
             this.timeMap = new TreeMap<>();
             addTime(tx);
         }
 
-        public void addTime(Tx tx) {
+        public void addTime(CustomTx tx) {
             Time time = new Time(tx);
 
             if (timeMap.containsKey(time.dateTime)) {
@@ -82,8 +82,8 @@ public class TxsCalculation {
             LocalDateTime dateTime;
             Integer txCount;
 
-            public Time(Tx tx) {
-                this.dateTime = tx.getId().getDatetime();
+            public Time(CustomTx tx) {
+                this.dateTime = tx.getDatetime();
                 this.txCount = tx.getTxsCount();
             }
         }
