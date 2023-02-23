@@ -95,7 +95,7 @@ public class ChartService implements IChartService {
 
     @Override
     public TxsChart findTxsChart(String zone, String period) {
-        return txsChartRepository.findByData_Zone(zone, -toHours(period));
+        return txsChartRepository.findByData_Zone(zone, -toDays(period));
     }
 
     @Override
@@ -123,5 +123,9 @@ public class ChartService implements IChartService {
 
     private Long toHours(String period) {
         return DurationStyle.SIMPLE.parse(period).toHours();
+    }
+
+    private Long toDays(String period) {
+        return DurationStyle.SIMPLE.parse(period).toDays();
     }
 }
