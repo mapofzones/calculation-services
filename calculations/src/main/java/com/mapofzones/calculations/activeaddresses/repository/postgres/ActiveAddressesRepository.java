@@ -13,10 +13,7 @@ import java.util.List;
 public interface ActiveAddressesRepository extends JpaRepository<ActiveAddress, ActiveAddress.ActiveAddressId> {
 
     @Query(name = "findActiveAddressesByPeriod", nativeQuery = true)
-    List<ActiveAddressesResultMapping> findActiveAddresses(LocalDateTime time);
-
-    @Query(name = "findIbcActiveAddressesByPeriod", nativeQuery = true)
-    List<ActiveAddressesResultMapping> findIbcActiveAddresses(LocalDateTime time);
+    List<ActiveAddressesResultMapping> findActiveAddresses(LocalDateTime from, LocalDateTime to);
 
     @Query(name = "findUniqueActiveAddressesByPeriod", nativeQuery = true)
     List<ActiveAddressesResultMapping> findUniqueActiveAddresses(LocalDateTime time);

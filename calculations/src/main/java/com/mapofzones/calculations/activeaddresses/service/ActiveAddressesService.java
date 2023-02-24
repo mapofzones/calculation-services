@@ -41,42 +41,33 @@ public class ActiveAddressesService {
 
     public void doCalculation() {
         List<ActiveAddressesResultMapping> activeAddressesResultMappingList = findAllActiveAddressesCountForLastPeriod(HOURS_IN_MONTH);
-        List<ActiveAddressesResultMapping> ibcActiveAddressesResultMappingList = findAllIbcActiveAddressesCountForLastPeriod(HOURS_IN_MONTH);
-
-        for (ActiveAddressesResultMapping activeAddressesResultMapping : activeAddressesResultMappingList) {
-            for (ActiveAddressesResultMapping ibcActiveAddressesResultMapping : ibcActiveAddressesResultMappingList) {
-                boolean isCompleted = activeAddressesResultMapping.completeResult(ibcActiveAddressesResultMapping);
-                if (isCompleted)
-                    break;
-            }
-        }
 
         List<ActiveAddressesChart> activeAddressesChart = ActiveAddressesCalculation.buildChart(activeAddressesResultMappingList);
 
-        List<ActiveAddressesStats> activeAddressesStats =
-                ActiveAddressesCalculation.buildStats(findTotalActiveAddressesCountDay(), findTotalActiveAddressesCountWeek(), findTotalActiveAddressesCountMonth(),
-                        findTotalIbcActiveAddressesCountDay(), findTotalIbcActiveAddressesCountWeek(), findTotalIbcActiveAddressesCountMonth());
+//        List<ActiveAddressesStats> activeAddressesStats =
+//                ActiveAddressesCalculation.buildStats(findTotalActiveAddressesCountDay(), findTotalActiveAddressesCountWeek(), findTotalActiveAddressesCountMonth(),
+//                        findTotalIbcActiveAddressesCountDay(), findTotalIbcActiveAddressesCountWeek(), findTotalIbcActiveAddressesCountMonth());
 
 
         //InterchainActiveAddressesChart interchainActiveAddressesChart = InterchainActiveAddressesCalculation.buildChart(findAllUniqueActiveAddressesCountForLastPeriod(HOURS_IN_MONTH));
         InterchainActiveAddressesStats interchainActiveAddressesStats = InterchainActiveAddressesCalculation.buildStats(findTotalUniqueActiveAddressesCountDay(),
                 findTotalUniqueActiveAddressesCountWeek(), findTotalUniqueActiveAddressesCountMonth());
 
-        update(activeAddressesChart, activeAddressesStats, interchainActiveAddressesStats);
+        update(activeAddressesChart, interchainActiveAddressesStats);
     }
 
     @Transactional
-    protected void update(List<ActiveAddressesChart> activeAddressesChart, List<ActiveAddressesStats> activeAddressesStats, InterchainActiveAddressesStats interchainActiveAddressesStats) {
+    protected void update(List<ActiveAddressesChart> activeAddressesChart, InterchainActiveAddressesStats interchainActiveAddressesStats) {
         clear();
         activeAddressesChartRepository.saveAll(activeAddressesChart);
-        activeAddressesStatsRepository.saveAll(activeAddressesStats);
+        //activeAddressesStatsRepository.saveAll(activeAddressesStats);
         interchainActiveAddressesStatsRepository.save(interchainActiveAddressesStats);
     }
 
     @Transactional
     protected void clear() {
         activeAddressesChartRepository.deleteAll();
-        activeAddressesStatsRepository.deleteAll();
+        //activeAddressesStatsRepository.deleteAll();
         interchainActiveAddressesChartRepository.deleteAll();
         interchainActiveAddressesStatsRepository.deleteAll();
 
@@ -85,13 +76,7 @@ public class ActiveAddressesService {
     @Transactional("postgresTransactionManager")
     protected List<ActiveAddressesResultMapping> findAllActiveAddressesCountForLastPeriod(long hours) {
         System.out.println("findAllActiveAddressesCountForLastPeriod start");
-        return activeAddressesRepository.findActiveAddresses(LocalDateTime.now().minus(hours, ChronoUnit.HOURS));
-    }
-
-    @Transactional("postgresTransactionManager")
-    protected List<ActiveAddressesResultMapping> findAllIbcActiveAddressesCountForLastPeriod(long hours) {
-        System.out.println("findAllIbcActiveAddressesCountForLastPeriod start");
-        return activeAddressesRepository.findIbcActiveAddresses(LocalDateTime.now().minus(hours, ChronoUnit.HOURS));
+        return activeAddressesRepository.findActiveAddresses(LocalDateTime.now().minus(hours, ChronoUnit.HOURS), LocalDateTime.now());
     }
 
     @Transactional("postgresTransactionManager")

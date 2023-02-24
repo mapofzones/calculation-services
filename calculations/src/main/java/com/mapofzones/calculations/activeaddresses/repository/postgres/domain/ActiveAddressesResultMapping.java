@@ -31,19 +31,16 @@ public class ActiveAddressesResultMapping {
         this.activeAddressesCount = activeAddressesCount;
     }
 
+    public ActiveAddressesResultMapping(String zone, LocalDateTime datetime, Integer activeAddressesCount, Integer ibcActiveAddressesCount) {
+        this.zone = zone;
+        this.datetime = datetime;
+        this.activeAddressesCount = activeAddressesCount;
+        this.ibcActiveAddressesCount = ibcActiveAddressesCount;
+    }
+
     private String zone;
     private LocalDateTime datetime;
     private Integer activeAddressesCount;
     private Integer ibcActiveAddressesCount;
-
-    public boolean completeResult(ActiveAddressesResultMapping ibcActiveAddressesResult) {
-        if (this.datetime.isEqual(ibcActiveAddressesResult.datetime) && this.zone.equals(ibcActiveAddressesResult.zone)) {
-            if (ibcActiveAddressesResult.getActiveAddressesCount() == null)
-                this.ibcActiveAddressesCount = 0;
-            else this.ibcActiveAddressesCount = ibcActiveAddressesResult.getActiveAddressesCount();
-            return true;
-        }
-        return false;
-    }
 
 }

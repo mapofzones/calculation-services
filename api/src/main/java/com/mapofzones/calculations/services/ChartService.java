@@ -105,10 +105,10 @@ public class ChartService implements IChartService {
 
     @Override
     public ActiveAddressesCountChart findActiveAddressesCountChart(String zone, String period) {
-        Long periodInHours = toHours(period);
-        ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByZoneAndPeriod(zone, periodInHours);
-        ActiveAddressesCountStats stats = activeAddressesCountStatsRepository.findByData_Zone(zone);
-        chart.setTotalActiveAddressesCountStats(stats, periodInHours);
+        Long periodInDays = -toDays(period)-1;
+        ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByZoneAndPeriod(zone, periodInDays);
+        //ActiveAddressesCountStats stats = activeAddressesCountStatsRepository.findByData_Zone(zone);
+        //chart.setTotalActiveAddressesCountStats(stats, periodInHours);
         return chart;
     }
 

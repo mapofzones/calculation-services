@@ -9,5 +9,5 @@ public interface ActiveAddressesCountChartRepository extends MongoRepository<Act
 
     @Transactional
     @Query(value = "{'data.zone': '?0'}", fields = "{'data.chart': {$slice: ?1}}")
-    ActiveAddressesCountChart findByZoneAndPeriod(String zone, Long periodInHours);
+    ActiveAddressesCountChart findByZoneAndPeriod(String zone, Long periodInDays);
 }

@@ -1,5 +1,6 @@
 package com.mapofzones.calculations.activeaddresses.repository.postgres.domain;
 
+import com.mapofzones.calculations.activeaddresses.repository.postgres.ActiveAddressesQueries;
 import com.mapofzones.calculations.common.domain.PostgresEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
@@ -27,25 +28,7 @@ import java.time.LocalDateTime;
 @Table(name = "ACTIVE_ADDRESSES")
 @NamedNativeQueries(value = {
     @NamedNativeQuery(name = "findActiveAddressesByPeriod", resultSetMapping = "activeAddressesMapping",
-        query = """
-            SELECT aa_count.zone, aa_count.hour as "datetime", count(aa_count.address) as "active_addresses_count" \
-                FROM \
-                    (SELECT DISTINCT aa.zone, aa.hour, aa.address \
-                        FROM active_addresses aa \
-                            WHERE aa.hour >= ?1 \
-                                AND (aa.is_internal_tx = TRUE OR aa.is_internal_transfer = TRUE)) AS "aa_count" \
-                GROUP BY aa_count.zone, aa_count.hour;
-        """),
-    @NamedNativeQuery(name = "findIbcActiveAddressesByPeriod", resultSetMapping = "activeAddressesMapping",
-        query = """
-            SELECT aa_count.zone, aa_count.hour as "datetime", count(aa_count.address) as "active_addresses_count" \
-                FROM \
-                    (SELECT DISTINCT aa.zone, aa.hour, aa.address \
-                        FROM active_addresses aa \
-                            WHERE aa.hour >= ?1 \
-                                AND (aa.is_internal_transfer = TRUE)) AS "aa_count" \
-                GROUP BY aa_count.zone, aa_count.hour;
-        """),
+        query = ActiveAddressesQueries.GET_ACTIVE_ADDRESSES_BY_PERIOD),
     @NamedNativeQuery(name = "findUniqueActiveAddressesByPeriod", resultSetMapping = "uniqueActiveAddressesMapping",
         query = """
             SELECT unique_aa_count.hour, count(unique_aa_count.cutted_address) as "active_addresses_count" \
@@ -76,8 +59,9 @@ import java.time.LocalDateTime;
     @SqlResultSetMapping(name = "activeAddressesMapping", classes = {
         @ConstructorResult(columns = {
             @ColumnResult(name = "zone", type = String.class),
-            @ColumnResult(name = "datetime", type = LocalDateTime.class),
-            @ColumnResult(name = "active_addresses_count", type = Integer.class)
+            @ColumnResult(name = "hour", type = LocalDateTime.class),
+            @ColumnResult(name = "active_addresses", type = Integer.class),
+            @ColumnResult(name = "ibc_active_addresses", type = Integer.class),
         }, targetClass = ActiveAddressesResultMapping.class)
     }),
     @SqlResultSetMapping(name = "uniqueActiveAddressesMapping", classes = {
