@@ -62,7 +62,11 @@ public class ChartService implements IChartService {
 
     @Override
     public DelegatorsCountChart findDelegatorsCountChart(String zone, String period) {
-        return delegatorsCountChartRepository.findByData_Zone(zone, -toDays(period) - 1);
+        DelegatorsCountChart delegatorsCountChart = delegatorsCountChartRepository.findByData_Zone(zone, -toDays(period) - 1);
+        delegatorsCountChart.getData().setTotalDelegatorsCount(
+                delegatorsCountChart.getData().getChart().get(delegatorsCountChart.getData().chart.size()-1).getDelegatorsCount()
+        );
+        return delegatorsCountChart;
     }
 
     @Override

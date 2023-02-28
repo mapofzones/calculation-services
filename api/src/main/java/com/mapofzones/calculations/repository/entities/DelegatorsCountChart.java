@@ -21,6 +21,7 @@ public class DelegatorsCountChart {
     @NoArgsConstructor
     public static class Data {
         public String zone;
+        public Integer totalDelegatorsCount;
         public List<Chart> chart;
 
         @Getter
@@ -29,10 +30,5 @@ public class DelegatorsCountChart {
             public Long time;
             public Integer delegatorsCount;
         }
-    }
-
-    public DelegatorsCountChart withPeriod(Long fromDate) {
-        this.data.chart = this.data.chart.stream().filter(ch -> ch.getTime() >= fromDate).collect(Collectors.toList());
-        return this;
     }
 }
