@@ -29,11 +29,11 @@ public class DelegatorsCountChart {
             this.zone = zone;
         }
         public String zone;
-        public List<Chart> chart;
+        public List<ChartItem> chart;
 
         @Getter
         @Setter
-        public static class Chart {
+        public static class ChartItem {
             public Long time;
             public Integer delegatorsCount;
         }

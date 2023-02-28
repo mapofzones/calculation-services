@@ -17,4 +17,7 @@ public interface ZoneParametersRepository extends JpaRepository<ZoneParameter, Z
             ORDER BY zp.zoneParametersId.datetime ASC
             """)
     List<ZoneParameter> findAllByZoneForLastPeriod(String zone, LocalDateTime timeUntilNow);
+
+    @Query(name = "getDelegatorsCount", nativeQuery = true)
+    List<ZoneParameter.DelegatorsCountMapping> getDelegatorsCount(LocalDateTime from, LocalDateTime to);
 }

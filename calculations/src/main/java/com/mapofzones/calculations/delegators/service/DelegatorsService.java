@@ -1,8 +1,6 @@
 package com.mapofzones.calculations.delegators.service;
 
 import com.mapofzones.calculations.common.domain.ZoneParameter;
-import com.mapofzones.calculations.common.domain.Zone;
-import com.mapofzones.calculations.common.postgres.repository.ZoneRepository;
 import com.mapofzones.calculations.common.postgres.repository.ZoneParametersRepository;
 import com.mapofzones.calculations.delegators.repository.mongo.DelegatorsCountChartRepository;
 import com.mapofzones.calculations.delegators.repository.mongo.domain.DelegatorsCountChart;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -24,31 +21,22 @@ public class DelegatorsService {
     private ZoneParametersRepository zoneParametersRepository;
 
     @Autowired
-    private ZoneRepository zoneRepository;
-
-    @Autowired
     private DelegatorsCountChartRepository delegatorsCountChartRepository;
 
     public void doCalculation() {
-        clear();
-        List<Zone> zones = zoneRepository.findAllByIsMainnetTrue();
+        List<ZoneParameter.DelegatorsCountMapping> zoneParametersList = findParametersForLastPeriod(HOURS_IN_MONTH);
+        List<DelegatorsCountChart> delegatorsChart = DelegatorsCalculation.buildChart(zoneParametersList);
 
-        for (Zone zone : zones) {
-            System.out.println(zone.getChainId());
-            doCalculation(zone.getChainId());
+        for (DelegatorsCountChart currentChart : delegatorsChart) {
+            boolean nullIsExists = currentChart.getData().getChart().stream().anyMatch(chartItem -> chartItem.delegatorsCount == null);
+            if (nullIsExists) {
+                for (int i = 1; i < currentChart.getData().getChart().size(); i++) {
+                    if (currentChart.getData().getChart().get(i).getDelegatorsCount() == null) {
+                        currentChart.getData().getChart().get(i).setDelegatorsCount(currentChart.getData().getChart().get(i-1).getDelegatorsCount());
+                    }
+                }
+            }
         }
-    }
-
-    public void doCalculation(String zone) {
-        List<ZoneParameter> zoneParametersList = findParametersForLastPeriod(zone, HOURS_IN_MONTH);
-        DelegatorsCountChart delegatorsChart = new DelegatorsCountChart(zone);
-        for (ZoneParameter zoneParameter : zoneParametersList) {
-            DelegatorsCountChart.Data.Chart chart = new DelegatorsCountChart.Data.Chart();
-            chart.setTime(zoneParameter.getZoneParametersId().getDatetime().toEpochSecond(ZoneOffset.UTC));
-            chart.setDelegatorsCount(zoneParameter.getDelegatorsCount());
-            delegatorsChart.getData().getChart().add(chart);
-        }
-
         update(delegatorsChart);
     }
 
@@ -58,14 +46,15 @@ public class DelegatorsService {
     }
 
     @Transactional
-    protected void update(DelegatorsCountChart delegatorsCountChart) {
+    protected void update(List<DelegatorsCountChart> delegatorsCountChart) {
+        clear();
         System.out.println("Start update");
-        delegatorsCountChartRepository.save(delegatorsCountChart);
+        delegatorsCountChartRepository.saveAll(delegatorsCountChart);
         System.out.println("Finish update");
     }
 
     @Transactional("postgresTransactionManager")
-    protected List<ZoneParameter> findParametersForLastPeriod(String zone, long hours) {
-        return zoneParametersRepository.findAllByZoneForLastPeriod(zone, LocalDateTime.now().minus(hours, ChronoUnit.HOURS));
+    protected List<ZoneParameter.DelegatorsCountMapping> findParametersForLastPeriod(long hours) {
+        return zoneParametersRepository.getDelegatorsCount(LocalDateTime.now().minus(hours, ChronoUnit.HOURS),  LocalDateTime.now());
     }
 }
