@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -70,6 +72,16 @@ public class ChartService implements IChartService {
     }
 
     @Override
+    public List<DelegatorsCountChart> findBulkDelegatorsCountChart(List<String> zones, String period) {
+        List<DelegatorsCountChart> delegatorsCountCharts = new ArrayList<>();
+
+        for (String zone : zones)
+            delegatorsCountCharts.add(findDelegatorsCountChart(zone, period));
+
+        return delegatorsCountCharts;
+    }
+
+    @Override
     public IbcTransferChart findIbcTransferChart(String zone, String period) {
         IbcTransferChart ibcTransferChart = ibcTransferChartRepository.findByZoneAndPeriod(zone, -toHours(period));
 
@@ -108,12 +120,33 @@ public class ChartService implements IChartService {
     }
 
     @Override
+    public List<TxsChart> findBulkTxsChart(List<String> zones, String period) {
+        List<TxsChart> txsCharts = new ArrayList<>();
+
+        for (String zone : zones)
+            txsCharts.add(findTxsChart(zone, period));
+
+        return txsCharts;
+    }
+
+    @Override
     public ActiveAddressesCountChart findActiveAddressesCountChart(String zone, String period) {
         Long periodInDays = -toDays(period)-1;
         ActiveAddressesCountChart chart = activeAddressesCountChartRepository.findByZoneAndPeriod(zone, periodInDays);
         //ActiveAddressesCountStats stats = activeAddressesCountStatsRepository.findByData_Zone(zone);
         //chart.setTotalActiveAddressesCountStats(stats, periodInHours);
         return chart;
+    }
+
+    @Override
+    public List<ActiveAddressesCountChart> findBulkActiveAddressesCountChart(List<String> zones, String period) {
+        List<ActiveAddressesCountChart> activeAddressesCountCharts = new ArrayList<>();
+
+        for (String zone : zones)
+            activeAddressesCountCharts.add(findActiveAddressesCountChart(zone, period));
+
+        return activeAddressesCountCharts;
+
     }
 
     @Override

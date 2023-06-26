@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class ChartController {
 
@@ -23,7 +25,10 @@ public class ChartController {
 
     @GetMapping("/api/beta/delegatorCountChart/{zone}/{period}")
     public ResponseEntity<?> findDelegatorsCountChart(@PathVariable String zone, @PathVariable String period) {
-        return new ResponseEntity<>(chartService.findDelegatorsCountChart(zone, period), HttpStatus.OK);
+        if (zone.contains(","))
+            return new ResponseEntity<>(chartService.findBulkDelegatorsCountChart(List.of(zone.split(",")), period), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(chartService.findDelegatorsCountChart(zone, period), HttpStatus.OK);
     }
 
     @GetMapping("/api/beta/ibcTransferChart/{zone}/{period}")
@@ -38,12 +43,18 @@ public class ChartController {
 
     @GetMapping("/api/beta/txsChart/{zone}/{period}")
     public ResponseEntity<?> findTxsChart(@PathVariable String zone, @PathVariable String period) {
-        return new ResponseEntity<>(chartService.findTxsChart(zone, period), HttpStatus.OK);
+        if (zone.contains(","))
+            return new ResponseEntity<>(chartService.findBulkTxsChart(List.of(zone.split(",")), period), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(chartService.findTxsChart(zone, period), HttpStatus.OK);
     }
 
     @GetMapping("/api/beta/activeAddressesCountChart/{zone}/{period}")
     public ResponseEntity<?> findActiveAddressesCountChart(@PathVariable String zone, @PathVariable String period) {
-        return new ResponseEntity<>(chartService.findActiveAddressesCountChart(zone, period), HttpStatus.OK);
+        if (zone.contains(","))
+            return new ResponseEntity<>(chartService.findBulkActiveAddressesCountChart(List.of(zone.split(",")), period), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(chartService.findActiveAddressesCountChart(zone, period), HttpStatus.OK);
     }
 
     @GetMapping("/api/beta/activeAddressesCountStats/{zone}")
