@@ -33,7 +33,12 @@ import java.time.LocalDateTime;
         query = """
             SELECT unique_aa_count.hour, count(unique_aa_count.cutted_address) as "active_addresses_count" \
                 FROM \
-                    (SELECT DISTINCT aa.hour, substr(aa.address, position('1' IN aa.address), length(aa.address) - (6 + position('1' IN aa.address) - 1)) AS "cutted_address" \
+                    (SELECT DISTINCT aa.hour, \
+                        CASE \
+                            WHEN position('1' IN aa.address) > 0 \
+                            THEN substr(aa.address, position('1' IN aa.address), length(aa.address) - (6 + position('1' IN aa.address) - 1)) \
+                            ELSE aa.address  \
+                        END AS "cutted_address" \
                         FROM active_addresses aa \
                             WHERE address != '' \
                                 AND aa.hour >= ?1 \
