@@ -35,8 +35,8 @@ import java.time.LocalDateTime;
                 FROM \
                     (SELECT DISTINCT aa.hour, \
                         CASE \
-                            WHEN position('1' IN aa.address) > 0 \
-                            THEN substr(aa.address, position('1' IN aa.address), length(aa.address) - (6 + position('1' IN aa.address) - 1)) \
+                            WHEN position('1' IN aa.address) > 0 AND position('1' IN aa.address) < length(aa.address) - 5 \
+                            THEN substr(aa.address, position('1' IN aa.address), GREATEST(1, length(aa.address) - (6 + position('1' IN aa.address) - 1))) \
                             ELSE aa.address  \
                         END AS "cutted_address" \
                         FROM active_addresses aa \
