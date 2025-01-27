@@ -31,7 +31,7 @@ public interface ActiveAddressesRepository extends JpaRepository<ActiveAddress, 
                 WHEN position('1' IN aa.address) > 0 \
                 THEN substr(aa.address, position('1' IN aa.address), length(aa.address) - (6 + position('1' IN aa.address) - 1)) \
                 ELSE aa.address  \
-            END AS "cutted_address" \
+            END) AS "cutted_address" \
                 FROM active_addresses aa \
                     WHERE aa.address != '' AND aa.hour >= ?1 \
                         AND (aa.is_internal_tx = TRUE OR aa.is_internal_transfer = TRUE)
